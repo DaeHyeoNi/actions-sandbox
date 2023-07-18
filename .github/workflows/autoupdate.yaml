@@ -14,4 +14,4 @@ jobs:
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           # PR_FILTER: "labelled"
-          EXCLUDED_LABELS: "dependencies"  # dependabot
+          EXCLUDED_LABELS: "dependencies,wont-autoupdate"  # dependabot
