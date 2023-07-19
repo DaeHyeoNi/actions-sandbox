@@ -5,18 +5,18 @@ on:
     types: [opened]
 
 jobs:
-  add_label:
+  comment:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Add label
+      - name: Comment
         if: ${{ github.base_ref == 'master' && github.head_ref == 'staging' }}
+        uses: actions/github-script@v6
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            github.rest.issues.addLabels({
-              issue_number: context.issue.number,
+            await github.issues.addLabels({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              labels: ["manual-branch-update"]
-            })
+              issue_number: context.payload.pull_request.number,
+              labels: ['manual-branch-update']
+            });
