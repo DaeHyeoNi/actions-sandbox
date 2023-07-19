@@ -10,7 +10,7 @@ jobs:
     name: autoupdate
     runs-on: ubuntu-22.04
     steps:
-      - if: ${{ !((github.base_ref == 'master' && github.head_ref == 'staging') && (github.base_ref == 'staging' && github.head_ref == 'prod')) }}
+      - if: ${{ !(github.base_ref == 'staging' && github.head_ref == 'master') || !(github.base_ref == 'prod' && github.head_ref == 'staging') }}
         uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
