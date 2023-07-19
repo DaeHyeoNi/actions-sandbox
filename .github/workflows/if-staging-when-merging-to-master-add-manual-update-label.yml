@@ -1,4 +1,4 @@
-name: Add Label on Staging to Master Comparison
+name: Add Label to Staging-to-Master Pull Requests
 
 on:
   pull_request:
@@ -11,8 +11,12 @@ jobs:
     steps:
       - name: Add label
         if: ${{ github.base_ref == 'master' && github.head_ref == 'staging' }}
-        uses: actions/labeler@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          labels: manual-branch-update
-          # add-labels: staging:master
+          script: |
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["manual-branch-update"]
+            })
