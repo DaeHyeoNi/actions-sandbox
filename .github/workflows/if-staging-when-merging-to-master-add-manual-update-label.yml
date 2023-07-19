@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Comment
-        if: ${{ github.base_ref == 'master' && github.head_ref == 'staging' }}
+        if: ${{ (github.base_ref == 'master' && github.head_ref == 'staging') || github.base_ref == 'staging' && github.head_ref == 'prod' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
