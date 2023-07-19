@@ -10,6 +10,9 @@ jobs:
     name: autoupdate
     runs-on: ubuntu-22.04
     steps:
-      - uses: docker://chinthakagodawita/autoupdate-action:v1
+      - if: ${{ github.head_ref != 'master' || github.head_ref != 'staging' || github.head_ref != 'prod' }}
+        uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+          # PR_FILTER: "labelled"
+          EXCLUDED_LABELS: "dependencies,manual-branch-update"  # dependabot
