@@ -9,8 +9,16 @@ jobs:
   comment:
     runs-on: ubuntu-latest
     steps:
-      - name: Comment
-        if: ${{ (github.base_ref == 'master' && github.head_ref == 'staging') || github.base_ref == 'staging' && github.head_ref == 'prod' }}
+        # Add 'manual-branch-update' label to PRs that merge between the following branches:
+        # master -> staging
+        # staging -> prod
+        # prod -> staging
+        # staging -> master
+      - if: |
+          (env.BASE_REF == 'master' && env.HEAD_REF == 'staging') ||
+          (env.BASE_REF == 'staging' && env.HEAD_REF == 'prod') ||
+          (env.BASE_REF == 'prod' && env.HEAD_REF == 'staging') ||
+          (env.BASE_REF == 'staging' && env.HEAD_REF == 'master')
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -21,3 +29,6 @@ jobs:
               repo: context.repo.repo,
               labels: ['manual-branch-update']
             })
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
