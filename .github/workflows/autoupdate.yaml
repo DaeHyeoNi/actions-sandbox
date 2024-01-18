@@ -10,8 +10,7 @@ jobs:
     name: autoupdate
     runs-on: ubuntu-22.04
     steps:
-      - if: ${{ !(github.base_ref == 'master' && github.head_ref == 'staging') }}
-        uses: docker://chinthakagodawita/autoupdate-action:v1
+      - uses: docker://chinthakagodawita/autoupdate-action:v1
         env:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
           # PR_FILTER: "labelled"
