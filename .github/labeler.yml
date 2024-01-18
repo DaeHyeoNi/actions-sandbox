@@ -1,2 +1,4 @@
 dev:
-  - base-branch: 'dev'
+- changed-files:
+  - any-glob-to-any-file: '**'
+- base-branch: 'dev'
