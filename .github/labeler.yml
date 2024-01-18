@@ -2,8 +2,8 @@ migration:
 - changed-files:
   - any-glob-to-any-file: ['**/migrations/*.py']
 
-dev-v2:
+dev:
 - all:
   - changed-files:
     - any-glob-to-any-file: '**'
-  - base-branch: 'dev-v2'
+  - base-branch: 'dev'
