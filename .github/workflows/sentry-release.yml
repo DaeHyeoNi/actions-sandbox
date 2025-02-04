@@ -1,0 +1,49 @@
+name: Sentry Release
+
+on:
+  workflow_run:
+    workflows: [GitHub Release]
+    types:
+      - completed
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Get latest release
+        id: get_release
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0)
+          echo "Latest tag: $LATEST_TAG"
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Debug values
+        run: |
+          echo "Latest tag from git: ${{ steps.get_release.outputs.tag }}"
+          echo "Workflow event details:"
+          echo "  Workflow name: ${{ github.event.workflow_run.name }}"
+          echo "  Workflow conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "  Repository: ${{ github.repository }}"
+          echo "  Branch: ${{ github.ref }}"
+          echo "  SHA: ${{ github.sha }}"
+
+      # - name: Create Sentry release
+      #   uses: getsentry/action-release@v1
+      #   env:
+      #     SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      #     SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+      #     SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+      #   with:
+      #     environment: prod
+      #     version: ${{ steps.get_release.outputs.tag }}
+
+  on-failure:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    steps:
+      - run: echo 'The triggering workflow(GitHub Release) failed.'
