@@ -19,7 +19,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          COUNT=$(gh pr list --state open --base staging --head master --json number -q 'length(.)')
+          COUNT=$(gh pr list --state open --base staging --head master --json number --jq 'length')
           echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
       - name: Create PR (master → staging)
