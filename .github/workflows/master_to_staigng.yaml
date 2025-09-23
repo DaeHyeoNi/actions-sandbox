@@ -31,5 +31,4 @@ jobs:
             --base staging \
             --head master \
             --title "Sync master → staging" \
-            --body "자동 생성된 PR입니다.\nmaster 브랜치를 staging으로 머지합니다. (자동 머지 없음)" \
-            --label auto-pr --label staging
+            --body "자동 생성된 PR입니다.\nmaster 브랜치를 staging으로 머지합니다."
