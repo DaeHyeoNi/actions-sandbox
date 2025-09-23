@@ -11,12 +11,7 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout master branch
-        uses: actions/checkout@v4
-        with:
-          ref: 'master'
-
-      - name: Create Pull Request from master to staging
+      - name: Create Pull Request from dev to staging
         uses: peter-evans/create-pull-request@v3
         with:
           title: 'Merge master into staging'
@@ -24,5 +19,5 @@ jobs:
           branch: 'master'
           base: 'staging'
           body: |
-            This is an automated pull request to merge changes from the `master` branch into the `staging` branch.
+            This is an automated pull request to merge changes from the `dev` branch into the `staging` branch.
           token: ${{ secrets.GITHUB_TOKEN }}
