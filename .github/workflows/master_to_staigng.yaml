@@ -17,7 +17,7 @@ jobs:
           ref: 'master'
 
       - name: Create Pull Request from master to staging
-        uses: peter-ev/create-pr-action@v3
+        uses: peter-evans/create-pull-request@v3
         with:
           title: 'Merge master into staging'
           commit-message: 'Merge master into staging'
