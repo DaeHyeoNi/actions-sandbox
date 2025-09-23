@@ -10,21 +10,26 @@ on:
 jobs:
   create-pr:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Check if PR exists
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COUNT=$(gh pr list --state open --base staging --head master --json number -q 'length(.)')
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
 
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          base: staging   # 머지 대상 브랜치
-          head: master       # 소스 브랜치
-          title: "Sync master -> staging"
-          body: |
-            자동 생성된 PR입니다.
-            dev 브랜치를 staging으로 머지합니다.
-          branch: dev-to-staging-pr
-          labels: |
-            auto-pr
-            staging
+      - name: Create PR (master → staging)
+        if: steps.check.outputs.count == '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base staging \
+            --head master \
+            --title "Sync master → staging" \
+            --body "자동 생성된 PR입니다.\nmaster 브랜치를 staging으로 머지합니다. (자동 머지 없음)" \
+            --label auto-pr --label staging
