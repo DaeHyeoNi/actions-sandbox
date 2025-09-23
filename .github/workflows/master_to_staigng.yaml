@@ -1,10 +1,8 @@
-name: Create staging deploy PR
+name: Create PR master → staging (gh)
 
 on:
-  # 매주 금요일 오전 9시 KST에 실행
   schedule:
-    - cron: "0 0 * * 5"
-  # 필요 시 수동으로 실행 가능
+    - cron: "0 0 * * 5"   # 금 09:00 KST
   workflow_dispatch:
 
 jobs:
@@ -14,13 +12,15 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      - uses: actions/checkout@v4
+
       - name: Check if PR exists
         id: check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           COUNT=$(gh pr list --state open --base staging --head master --json number -q 'length(.)')
-          echo "count=$COUNT" >> $GITHUB_OUTPUT
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
 
       - name: Create PR (master → staging)
         if: steps.check.outputs.count == '0'
